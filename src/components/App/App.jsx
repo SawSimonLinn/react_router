@@ -1,0 +1,65 @@
+// Import the react and react-router-dom
+import { Routes, Route } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+
+// Import the components
+import Header from '../Header/Header';
+import Dashboard from '../Dashboard/Dashboard';
+import Reviews from '../Reviews/Reviews';
+import Review from '../Review/Review';
+import AboutMe from '../AboutMe/AboutMe';
+import AboutUs from '../AboutUs/AboutUs';
+import PageNotFound from '../PageNotFound/PageNotFound';
+
+// Import the new AboutMe components
+import Contact from '../AboutMe/Contact';
+import Hobbies from '../AboutMe/Hobbies';
+import MyStory from '../AboutMe/MyStory';
+
+//Imprt the new AboutUs components
+import SiteHistory from '../AboutUs/SiteHistory';
+import SiteMission from '../AboutUs/SiteMission';
+
+// Import the App.css
+import './App.css';
+
+// Create the App component
+function App() {
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    fetch('https://api.nomoreparties.co/emoji-critic-ens')
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        setReviews(data);
+      })
+      .catch(console.error);
+  }, []);
+  return (
+    <div className='App'>
+      <Header />
+      <Routes>
+        <Route path='/' element={<Dashboard />} />
+        <Route path='/reviews' element={<Reviews reviews={reviews} />} />
+        <Route
+          path='/reviews/:reviewId'
+          element={<Review reviews={reviews} />}
+        />
+        <Route path='/about-me' element={<AboutMe />}>
+          <Route path='contact' element={<Contact />} />
+          <Route path='hobbies' element={<Hobbies />} />
+          <Route path='my-story' element={<MyStory />} />
+        </Route>
+        <Route path='/about-us' element={<AboutUs />}>
+          <Route path='site-history' element={<SiteHistory />} />
+          <Route path='site-mission' element={<SiteMission />} />
+        </Route>
+        <Route path='*' element={<PageNotFound />} />
+      </Routes>
+    </div>
+  );
+}
+
+export default App;
